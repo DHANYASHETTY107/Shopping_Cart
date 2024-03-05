@@ -12,27 +12,33 @@ import formal_Shoe from './Images/FormalShoe.jpg';
 import backpack from './Images/Bag.jpg';
 
 
-
 function App() {
   const [cart, setCart] = useState([]);
+  const [category, setCategory] = useState('All');
 
-  // Dummy data for products
   const products = [
-    { id: 1, name: 'Oxford Shirts', price: 1200, rating: 4.9,image:shirtImage },
-    { id: 2, name: 'Tunic', price: 459, rating: 4.4, image:tunic },
-    { id: 3, name: 'Huawei Watch Buds', price: 4059, rating: 4.4, image:watchbuds },
-    { id: 4, name: 'Short-Sleeve Shirt', price: 800, rating: 4.9, image: sleeve_shirt},
-    { id: 5, name: 'Leather Belt', price: 350, rating: 4.6, image:belt },
-    { id: 6, name: 'Running Sneakers', price: 2999, rating: 4.7, image: sneekers},
-    { id: 7, name: 'Sunglasses', price: 899, rating: 4.5, image: sunglass},
-    { id: 8, name: 'Casual Watch', price: 2599, rating: 4.8, image: casualWatch },
-    { id: 9, name: 'Formal Shoes', price: 1999, rating: 4.3, image: formal_Shoe },
-    { id: 10, name: 'Backpack', price: 1299, rating: 4.7, image:backpack},
-    // Add other products here
+    { id: 1, name: 'Oxford Shirts', price: 1200, rating: 4.9, image: shirtImage, category: 'Men' },
+    { id: 2, name: 'Tunic', price: 459, rating: 4.4, image: tunic, category: 'Women' },
+    { id: 3, name: 'Huawei Watch Buds', price: 4059, rating: 4.4, image: watchbuds, category: 'Electronics' },
+    { id: 4, name: 'Short-Sleeve Shirt', price: 800, rating: 4.9, image: sleeve_shirt, category: 'Men' },
+    { id: 5, name: 'Leather Belt', price: 350, rating: 4.6, image: belt, category: 'Accessories' },
+    { id: 6, name: 'Running Sneakers', price: 2999, rating: 4.7, image: sneekers, category: 'Men' },
+    { id: 7, name: 'Sunglasses', price: 899, rating: 4.5, image: sunglass, category: 'Accessories' },
+    { id: 8, name: 'Casual Watch', price: 2599, rating: 4.8, image: casualWatch, category: 'Accessories' },
+    { id: 9, name: 'Formal Shoes', price: 1999, rating: 4.3, image: formal_Shoe, category: 'Men' },
+    { id: 10, name: 'Backpack', price: 1299, rating: 4.7, image: backpack, category: 'Accessories' },
   ];
 
   const addToCart = (product) => {
     setCart([...cart, product]);
+  };
+
+  const filterProducts = () => {
+    if (category === 'All') {
+      return products;
+    } else {
+      return products.filter(product => product.category === category);
+    }
   };
 
   return (
@@ -42,15 +48,14 @@ function App() {
           <input type="search" placeholder="Search" id="search-bar" />
         </div>
         <div className="filter-options">
-          <button>All</button>
-          <button>Men</button>
-          <button>Women</button>
-          <button>Watch</button>
+          <button onClick={() => setCategory('All')}>All</button>
+          <button onClick={() => setCategory('Men')}>Men</button>
+          <button onClick={() => setCategory('Women')}>Women</button>
         </div>
       </header>
 
       <main>
-        <ProductList products={products} addToCart={addToCart} />
+        <ProductList products={filterProducts()} addToCart={addToCart} />
         <ShoppingCart cart={cart} />
       </main>
     </div>
@@ -80,7 +85,6 @@ function ProductCard({ product, addToCart }) {
 }
 
 function ShoppingCart({ cart }) {
-  // Calculate total
   const total = cart.reduce((acc, item) => acc + item.price, 0);
 
   return (
@@ -89,7 +93,6 @@ function ShoppingCart({ cart }) {
       {cart.map((item, index) => (
         <div key={index} className="cart-item">
           <h3>{item.name}</h3>
-          {/* Quantity controls would go here */}
           <p>${item.price}</p>
         </div>
       ))}
